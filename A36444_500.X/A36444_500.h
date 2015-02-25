@@ -22,13 +22,13 @@
   SPI1   - Used/Configured by LTC265X Module
   I2C    - Used/Configured by EEPROM Module
 
-
-  Timer1 - Used to time to Lambda Charge Time and the Lambda Inhibit Time and the startup timer
   Timer5 - Used for 10msTicToc
 
   ADC Module - See Below For Specifics
 
 */
+
+
 
 
 // ----------------- IO PIN CONFIGURATION -------------------- //
@@ -38,18 +38,18 @@
 // ----------------- DIGITAL INPUT PINS --------------- //
 /*
 
-  RA12 - Fiber Trigger IN
-  RA13 - Fiber Energy Select
-  RA14 - Auto Inhibit Detect
-  RA15 - Lambda EOC
+  RA12 - (unused) Fiber Trigger IN
+  RA13 - (unused) Fiber Energy Select
+  RA14 - (unused) Auto Inhibit Detect
+  RA15 - (unused) Lambda EOC
 
-  RD8  - Lambda Not Powered
-  RD9  - Lambda Over Temp FLT
-  RD10 - Lamdba Interlock FLT
-  RD12 - Lambda Load FLT
-  RD13 - Lambda Sum FLT
-  RD14 - Lambda Phase Loss FLT
-  RD15 - Lambda HV ON Readback
+  RD8  - (unused) Lambda Not Powered
+  RD9  - PIN INPUT TEMPERATURE OK (formerly) Lambda Over Temp FLT
+  RD10 - PIC INPUT CROWBAR UP     (formerly) Lamdba Interlock FLT
+  RD12 - PIB INPUT HEATER OV OK   (formerly) Lambda Load FLT
+  RD13 - (unused) Lambda Sum FLT
+  RD14 - (unused) Lambda Phase Loss FLT
+  RD15 - (unused)Lambda HV ON Readback
   
   RG14 - Reset Detect
 
@@ -62,14 +62,14 @@
 
   RB0 PROGRAM
   RB1 PROGRAM
-  RB3  - Analog Input
-  RB4  - Analog Input
-  RB5  - Analog Input
-  RB6  - Analog Input
-  RB12 - Analog Input
-  RB13 - Analog Input
-  RB14 - Analog Input
-  RB15 - Analog Input
+  RB3  - Analog Input - unused
+  RB4  - Analog Input - unused
+  RB5  - Analog Input - PIC ADC MAGNET IMON
+  RB6  - Analog Input - PIC ADC HEATER IMON
+  RB12 - Analog Input - unused 
+  RB13 - Analog Input - unused
+  RB14 - Analog Input - unused
+  RB15 - Analog Input - unused
 
   RF0 CAN 1
   RF1 CAN 1
@@ -91,8 +91,8 @@
 /*
   
   RD11 - Lamdba Voltage Select
-  RD0 - Lambda Inhibit (This is also Output Compare 1 - If we want to use that module to generate Inhibit signal)
-  RD1 - Lambda Enable
+  RD0 - (unused) Lambda Inhibit (This is also Output Compare 1 - If we want to use that module to generate Inhibit signal)
+  RD1 - HEATER MAGNET DISABLE     (formerly) Lambda Enable
 
 
   RA7 - LED Operational
@@ -108,49 +108,35 @@
 */
 
 
-#define A36444_TRISA_VALUE 0b1111011000000000 
-#define A36444_TRISB_VALUE 0b1111000001111011 
-#define A36444_TRISC_VALUE 0b0000000000000010 
-#define A36444_TRISD_VALUE 0b1111011100000000 
-#define A36444_TRISF_VALUE 0b0000000111000011 
-#define A36444_TRISG_VALUE 0b1100000000001100
+#define A36444_500_TRISA_VALUE 0b1111011000000000 
+#define A36444_500_TRISB_VALUE 0b1111000001111011 
+#define A36444_500_TRISC_VALUE 0b0000000000000010 
+#define A36444_500_TRISD_VALUE 0b1111011100000000 
+#define A36444_500_TRISF_VALUE 0b0000000111000011 
+#define A36444_500_TRISG_VALUE 0b1100000000001100
 
 
 
 // -------- Digital Input Pins ----------//
-#define PIN_FIBER_TRIGGER_IN                  _RA12
-#define PIN_FIBER_ENERGY_SELECT               _RA13
-#define PIN_AUTO_INHIBIT                      _RA14
-
-#define PIN_LAMBDA_EOC                        _RA15
-#define PIN_LAMBDA_HV_ON_READBACK             _RD15
-#define PIN_LAMBDA_NOT_POWERED                _RD8
-
-#define PIN_LAMBDA_SUM_FLT                    _RD13
-#define PIN_LAMBDA_PHASE_LOSS_FLT             _RD14
-#define PIN_LAMBDA_OVER_TEMP_FLT              _RD9
-#define PIN_LAMBDA_INTERLOCK_FLT              _RD10
-#define PIN_LAMBDA_LOAD_FLT                   _RD12
+#define PIN_PIC_INPUT_TEMPERATURE_OK          _RD9
+#define PIN_PIC_INPUT_CROWBAR_UP              _RD10
+#define PIN_PIC_INPUT_HEATER_OV_OK            _RD12
 
 
 
 #define PIN_RESET_DETECT                      _RG14
 
-
-#define ILL_HIGH_ENERGY_SELECTED              1
-#define ILL_LAMBDA_AT_EOC                     1
-#define ILL_LAMBDA_NOT_POWERED                1
-#define ILL_LAMBDA_HV_ON                      1
-#define ILL_LAMBDA_FAULT_ACTIVE               1
+#define ILL_HEATER_OV                         0
+#define ILL_TEMP_SWITCH_FAULT                 0
+#define ILL_RELAY_OPEN                        0
 
 
 
 
 // ------- Digital Output Pins ---------//
 
-#define PIN_LAMBDA_VOLTAGE_SELECT             _LATD11
-#define PIN_LAMBDA_INHIBIT                    _LATD0
-#define PIN_LAMBDA_ENABLE                     _LATD1
+#define PIN_HEATER_MAGNET_DISABLE             _LATD1
+#define PIN_SELECT_DAC_C_D                    _LATD11
 
 #define PIN_LED_OPERATIONAL_GREEN             _LATA7
 #define PIN_LED_A_RED                         _LATG12
@@ -164,24 +150,24 @@
 #define PIN_OUT_TP_F                          _LATB9
 
 #define OLL_LED_ON                            0
-#define OLL_SELECT_HIGH_ENERGY_MODE           1
-#define OLL_INHIBIT_LAMBDA                    0
-#define OLL_ENABLE_LAMBDA                     0
+#define OLL_CLOSE_RELAY                       0
+#define OLL_SELECT_DAC_C                      1
+
 
 
 // ------------------------ CONFIGURE ADC MODULE ------------------- //
 
 // ----------------- ANALOG INPUT PINS ---------------- //
 /* 
-   AN3 - Lambda Vmon
-   AN4 - Lambda Heat Sink Temp
-   AN5 - Lambda VPeak
-   AN6 - Lambda Imon
+   AN3 - (unused) Lambda Vmon
+   AN4 - (unused) Lambda Heat Sink Temp
+   AN5 - Magnet Imon       (formerly) Lambda VPeak
+   AN6 - Heater Imon       (formerly) Lambda Imon
    
-   AN12 - ADC Test Input
-   AN13 - 5V Mon
-   AN14 - +15V Mon
-   AN15 - -15V Mon
+   AN12 - (unused) ADC Test Input
+   AN13 - (unused) 5V Mon
+   AN14 - (unused) +15V Mon
+   AN15 - (unused) -15V Mon
    
 */
 
@@ -194,35 +180,15 @@
   8 Samples per Interrupt, use alternating buffers
   Scan Through Selected Inputs
 
-  // DPARKER it may be easier to read all the inputs all the time instead of reconfiguring the ADC, we don't need the high speed reading
-
 */
 
 #define ADCON1_SETTING          (ADC_MODULE_OFF & ADC_IDLE_STOP & ADC_FORMAT_INTG & ADC_CLK_AUTO & ADC_AUTO_SAMPLING_ON)
 #define ADCON2_SETTING          (ADC_VREF_EXT_EXT & ADC_SCAN_ON & ADC_SAMPLES_PER_INT_8 & ADC_ALT_BUF_ON & ADC_ALT_INPUT_OFF)
-#define ADCHS_SETTING           (ADC_CH0_POS_SAMPLEA_AN3 & ADC_CH0_NEG_SAMPLEA_VREFN & ADC_CH0_POS_SAMPLEB_AN3 & ADC_CH0_NEG_SAMPLEB_VREFN)
+#define ADCHS_SETTING           (ADC_CH0_POS_SAMPLEA_AN5 & ADC_CH0_NEG_SAMPLEA_VREFN & ADC_CH0_POS_SAMPLEB_AN6 & ADC_CH0_NEG_SAMPLEB_VREFN)
 #define ADPCFG_SETTING          (ENABLE_AN3_ANA & ENABLE_AN4_ANA & ENABLE_AN5_ANA & ENABLE_AN6_ANA & ENABLE_AN12_ANA & ENABLE_AN13_ANA & ENABLE_AN14_ANA & ENABLE_AN15_ANA)
 
-#define ADCSSL_SETTING_OPERATE  (SKIP_SCAN_AN0 & SKIP_SCAN_AN1 & SKIP_SCAN_AN2 & SKIP_SCAN_AN7 & SKIP_SCAN_AN8 & SKIP_SCAN_AN9 & SKIP_SCAN_AN10 & SKIP_SCAN_AN11 & SKIP_SCAN_AN12 & SKIP_SCAN_AN13 & SKIP_SCAN_AN14 & SKIP_SCAN_AN15)
-#define ADCON3_SETTING_OPERATE  (ADC_SAMPLE_TIME_4 & ADC_CONV_CLK_SYSTEM & ADC_CONV_CLK_9Tcy2)
-
-#define ADCSSL_SETTING_STARTUP  (SKIP_SCAN_AN0 & SKIP_SCAN_AN1 & SKIP_SCAN_AN2 & SKIP_SCAN_AN3 & SKIP_SCAN_AN4 & SKIP_SCAN_AN5 & SKIP_SCAN_AN6 &  SKIP_SCAN_AN7 & SKIP_SCAN_AN8 & SKIP_SCAN_AN9 & SKIP_SCAN_AN10 & SKIP_SCAN_AN11)
-#define ADCON3_SETTING_STARTUP  (ADC_SAMPLE_TIME_31 & ADC_CONV_CLK_SYSTEM & ADC_CONV_CLK_10Tcy)
-
-
-/* 
-   ---------- TMR1 Configuration -----------
-   Timer1 - Used to time to Lambda Charge Time and the Lambda Inhibit Time
-   With 10Mhz Clock, x8 multiplier will yield max period of 17.7mS, 2.71uS per tick
-*/
-    
-#define T1CON_VALUE                    (T1_OFF & T1_IDLE_CON & T1_GATE_OFF & T1_PS_1_8 & T1_SOURCE_INT)
-#define TMR1_DELAY_HOLDOFF_US          LAMBDA_HOLDOFF_TIME_US
-#define TMR1_LAMBDA_CHARGE_TIME_US     LAMBDA_MAX_CHARGE_TIME_US
-#define TMR1_DELAY_HOLDOFF             (FCY_CLK_MHZ*TMR1_DELAY_HOLDOFF_US/8)    
-#define TMR1_LAMBDA_CHARGE_PERIOD      (FCY_CLK_MHZ*TMR1_LAMBDA_CHARGE_TIME_US/8)
-#define TMR1_RETRIGGER_BLANK           (FCY_CLK_MHZ*RETRIGGER_BLANKING_US/8)
-
+#define ADCSSL_SETTING          (SKIP_SCAN_AN0 & SKIP_SCAN_AN1 & SKIP_SCAN_AN2 & SKIP_SCAN_AN3 & SKIP_SCAN_AN4 & SKIP_SCAN_AN7 & SKIP_SCAN_AN8 & SKIP_SCAN_AN9 & SKIP_SCAN_AN10 & SKIP_SCAN_AN11 & SKIP_SCAN_AN12 & SKIP_SCAN_AN13 & SKIP_SCAN_AN14 & SKIP_SCAN_AN15)
+#define ADCON3_SETTING          (ADC_SAMPLE_TIME_4 & ADC_CONV_CLK_SYSTEM & ADC_CONV_CLK_9Tcy2)
 
 
 /* 
@@ -237,109 +203,61 @@
 #define PR5_VALUE_10_MILLISECONDS      (FCY_CLK_MHZ*PR5_PERIOD_US/8)
 
 
-
-// -------------------- A36444 STATUS BIT CONFIGURATION ------------------------ //
-#define STATUS_LAMBDA_AT_EOC                   STATUS_BIT_USER_DEFINED_8
-#define STATUS_BIT_SOFTWARE_DISABLE            STATUS_BIT_USER_DEFINED_9
-#define STATUS_LAMBDA_READBACK_HV_OFF          STATUS_BIT_USER_DEFINED_10
-#define STATUS_LAMBDA_HIGH_ENERGY              STATUS_BIT_USER_DEFINED_11
-#define STATUS_LAMBDA_NOT_POWERED              STATUS_BIT_USER_DEFINED_12
-
-
-
-// -------------------- A36444 FAULTS/WARNINGS CONFIGURATION-------------------- //
-#define FAULT_LAMBDA_SUM_FAULT                 FAULT_BIT_USER_DEFINED_1
-#define FAULT_LAMBDA_PHASE_LOSS_FAULT          FAULT_BIT_USER_DEFINED_2
-#define FAULT_LAMBDA_OVER_TEMP_FAULT           FAULT_BIT_USER_DEFINED_3
-#define FAULT_LAMBDA_INTERLOCK_FAULT           FAULT_BIT_USER_DEFINED_4
-#define FAULT_LAMBDA_LOAD_FAULT                FAULT_BIT_USER_DEFINED_5
-#define FAULT_LAMBDA_EOC_WARNING               FAULT_BIT_USER_DEFINED_6
-#define FAULT_LAMBDA_ANALOG_TEMP_OOR           FAULT_BIT_USER_DEFINED_7
-
-
-// -------------------- FAULT CONFIGURATION -------------------------------------- //
-//#define A36444_INHIBIT_MASK        0b0001011000000100  
-//#define A36444_FAULT_MASK          0b0000000000000011  
-
-#define A36444_INHIBIT_MASK        0b0000001000000100  // Testing only
-#define A36444_FAULT_MASK          0b0000000000000011  // Testing only
-
-
-
-
-
-
-
 typedef struct {
-  AnalogInput analog_input_lambda_vmon;               // 1V per LSB
-  AnalogInput analog_input_lambda_vpeak;              // 1V per LSB
-  AnalogInput analog_input_lambda_imon;               // 100uA per LSB
-  AnalogInput analog_input_lambda_heat_sink_temp;     // 1 mili Deg C per LSB
+  // all currents are scaled to 1mA per lsb
+  // all voltages are scaled to 1mV per lsb
 
-  AnalogInput analog_input_5v_mon;                    // 1mV per LSB
-  AnalogInput analog_input_15v_mon;                   // 1mV per LSB
-  AnalogInput analog_input_neg_15v_mon;               // 1mV per LSB
-  AnalogInput analog_input_pic_adc_test_dac;          // 62.5uV per LSB
+  AnalogInput analog_input_heater_voltage;
+  AnalogInput analog_input_heater_current;
 
+  AnalogInput analog_input_electromagnet_voltage;
+  AnalogInput analog_input_electromagnet_current;
 
-  AnalogOutput analog_output_high_energy_vprog;       // 1V per LSB
-  AnalogOutput analog_output_low_energy_vprog;        // 1V per LSB
+  AnalogOutput analog_output_heater_current;
+  AnalogOutput analog_output_electromagnet_current;
 
-  AnalogOutput analog_output_spare;                   // 1mV per LSB
-  AnalogOutput analog_output_adc_test;                // 62.5uV per LSB
+  unsigned int  accumulator_counter;
 
-  unsigned int accumulator_counter;
-  unsigned int adc_ignore_current_sample;
-  unsigned int eoc_not_reached_count;
-  unsigned int control_state;
-  unsigned int led_divider;
-  unsigned int run_post_pulse_process;
-  unsigned int no_pulse_counter;
-  unsigned int pulse_counter;
-  unsigned int post_pulse_did_not_run_counter;
-  unsigned int charge_period_error_counter;
-  unsigned int power_up_timer;
+  unsigned int  adc_ignore_current_sample;
+
+  unsigned int startup_count;
   unsigned int fault_active;
-  unsigned int power_up_delay_counter;
-  unsigned int fault_wait_time;
+  unsigned int power_up_test_timer;
 
-} LambdaControlData;
+  unsigned int control_state;
 
-extern LambdaControlData global_data_A36444;
+} HeaterMagnetControlData;
 
 
-// State Definitions
-#define STATE_STARTUP                10
-#define STATE_WAITING_FOR_CONFIG     20
-#define STATE_WAITING_FOR_POWER      30
-#define STATE_POWER_UP               40
-#define STATE_POWER_TEST             45
-#define STATE_OPERATE                50
-#define STATE_FAULT_WAIT             55
-#define STATE_FAULT                  60
+extern HeaterMagnetControlData global_data_A36444_500;
 
 
 
-#define DELAY_TCY_5US                FCY_CLK_MHZ*5
+#define _STATUS_MAGNET_OFF_READBACK                     _STATUS_0
+#define _STATUS_HEATER_OFF_READBACK                     _STATUS_1
+#define _STATUS_OUTPUT_RELAY_OPEN                       _STATUS_2
+#define _STATUS_PERMA_FAULTED                           _STATUS_3
 
 
+#define _FAULT_HEATER_OVER_CURRENT_ABSOLUTE             _FAULT_0
+#define _FAULT_HEATER_UNDER_CURRENT_ABSOLUTE            _FAULT_1
+#define _FAULT_HEATER_OVER_CURRENT_RELATIVE             _FAULT_2
+#define _FAULT_HEATER_UNDER_CURRENT_RELATIVE            _FAULT_3
+#define _FAULT_HEATER_OVER_VOLTAGE_ABSOLUTE             _FAULT_4
+#define _FAULT_HEATER_UNDER_VOLTAGE_RELATIVE            _FAULT_5
 
-#define _STATUS_LAMBDA_AT_EOC                           _STATUS_0
-#define _STATUS_LAMBDA_HIGH_ENERGY                      _STATUS_1
-#define _STATUS_LAMBDA_READBACK_HV_OFF                  _STATUS_2
-#define _STATUS_STATE_FAULT                             _STATUS_3
-#define _STATUS_LAMBDA_NOT_POWERED                      _STATUS_4
 
-#define _FAULT_LAMBDA_SUM_FAULT                         _FAULT_0
-#define _FAULT_LAMBDA_NOT_POWERED                       _FAULT_1
-#define _FAULT_LAMBDA_READBACK_HV_OFF                   _FAULT_2
-#define _FAULT_LAMBDA_PHASE_LOSS                        _FAULT_3
-#define _FAULT_LAMBDA_OVER_TEMP                         _FAULT_4
-#define _FAULT_LAMBDA_INTERLOCK                         _FAULT_5
-#define _FAULT_LAMBDA_LOAD_FLT                          _FAULT_6
-#define _FAULT_POWER_UP_TIMEOUT                         _FAULT_7
-#define _FAULT_CAN_COMMUNICATION_LATCHED                _FAULT_8
+#define _FAULT_MAGNET_OVER_CURRENT_ABSOLUTE             _FAULT_6
+#define _FAULT_MAGNET_UNDER_CURRENT_ABSOLUTE            _FAULT_7
+#define _FAULT_MAGNET_OVER_CURRENT_RELATIVE             _FAULT_8
+#define _FAULT_MAGNET_UNDER_CURRENT_RELATIVE            _FAULT_9
+#define _FAULT_MAGNET_OVER_VOLTAGE_ABSOLUTE             _FAULT_A
+#define _FAULT_MAGNET_UNDER_VOLTAGE_RELATIVE            _FAULT_B
 
+#define _FAULT_HW_HEATER_OVER_VOLTAGE                   _FAULT_C
+#define _FAULT_HW_TEMPERATURE_SWITCH                    _FAULT_D
+#define _FAULT_COOLANT_FAULT                            _FAULT_E
+#define _FAULT_CAN_COMMUNICATION_LATCHED                _FAULT_F
 
 
 #endif

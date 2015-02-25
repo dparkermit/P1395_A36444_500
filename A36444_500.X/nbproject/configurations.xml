@@ -189,7 +189,8 @@
         <property key="warn-section-align" value="false"/>
       </C30-LD>
       <C30Global>
-        <property key="common-include-directories" value="..\..\P1395_Modules"/>
+        <property key="common-include-directories"
+                  value="..\..\P1395_Modules;..\A36444_500.X\"/>
         <property key="dual-boot-partition" value="0"/>
         <property key="fast-math" value="false"/>
         <property key="generic-16-bit" value="false"/>
