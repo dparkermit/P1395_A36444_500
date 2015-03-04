@@ -126,9 +126,9 @@
 
 #define PIN_RESET_DETECT                      _RG14
 
-#define ILL_HEATER_OV                         0
+#define ILL_HEATER_OV                         1
 #define ILL_TEMP_SWITCH_FAULT                 0
-#define ILL_RELAY_OPEN                        0
+#define ILL_RELAY_OPEN                        1
 
 
 
