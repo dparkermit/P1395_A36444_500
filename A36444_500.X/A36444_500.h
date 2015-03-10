@@ -121,7 +121,7 @@
 #define PIN_PIC_INPUT_TEMPERATURE_OK          _RD9
 #define PIN_PIC_INPUT_CROWBAR_UP              _RD10
 #define PIN_PIC_INPUT_HEATER_OV_OK            _RD12
-
+#define PIN_FIBER_ENERGY_SELECT               _RA13
 
 
 #define PIN_RESET_DETECT                      _RG14
@@ -129,7 +129,7 @@
 #define ILL_HEATER_OV                         1
 #define ILL_TEMP_SWITCH_FAULT                 0
 #define ILL_RELAY_OPEN                        1
-
+#define ILL_ENERGY_SELECT_WATER_FLOW_OK       1
 
 
 
@@ -225,6 +225,8 @@ typedef struct {
   unsigned int power_up_test_timer;
 
   unsigned int control_state;
+
+  unsigned int water_flow_counter;
 
 } HeaterMagnetControlData;
 

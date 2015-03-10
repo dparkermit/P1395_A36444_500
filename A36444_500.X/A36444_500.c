@@ -205,8 +205,6 @@ void DoA36444_500(void) {
     local_debug_data.debug_E = ADCBUFA;
     local_debug_data.debug_F = ADCBUFB;
 
-    
-
     if (global_data_A36444_500.control_state == STATE_POWER_UP_TEST) {
       global_data_A36444_500.power_up_test_timer++;
     }
@@ -240,6 +238,26 @@ void DoA36444_500(void) {
 // -------------------- CHECK FOR FAULTS ------------------- //
 
     global_data_A36444_500.fault_active = 0;
+
+
+    // DPARKER - Temporary Code to look for fiber flow signal
+#define FAULT_WATER_FLOW_COUNTER 500  // 5 seconds
+
+    if (PIN_FIBER_ENERGY_SELECT != ILL_ENERGY_SELECT_WATER_FLOW_OK) {
+      global_data_A36444_500.water_flow_counter++;
+    } else {
+      if (global_data_A36444_500.water_flow_counter) {
+	global_data_A36444_500.water_flow_counter--;
+      }
+    }
+
+    if (global_data_A36444_500.water_flow_counter >= FAULT_WATER_FLOW_COUNTER) {
+      _FAULT_COOLANT_FAULT = 1;
+      global_data_A36444_500.water_flow_counter = FAULT_WATER_FLOW_COUNTER;
+    }
+    // End temporary code
+
+
    
     if (PIN_PIC_INPUT_HEATER_OV_OK == ILL_HEATER_OV) {
       _FAULT_HW_HEATER_OVER_VOLTAGE = 1;
@@ -254,13 +272,19 @@ void DoA36444_500(void) {
     // DPARKER check SYNC message for coolant flow and fault if there is a problem
     if (_SYNC_CONTROL_COOLING_FAULT) {
       _FAULT_COOLANT_FAULT = 1;
-      global_data_A36444_500.fault_active = 1;
     } else {
       if (_SYNC_CONTROL_RESET_ENABLE) {
-	_FAULT_COOLANT_FAULT = 0;
+	//_FAULT_COOLANT_FAULT = 0;
+	if (global_data_A36444_500.water_flow_counter == 0) {
+	  _FAULT_COOLANT_FAULT = 0;
+	}
       }
     }
-
+    
+    if (_FAULT_COOLANT_FAULT) {
+      global_data_A36444_500.fault_active = 1;
+    }
+    
     if (_CONTROL_CAN_COM_LOSS) {
       _FAULT_CAN_COMMUNICATION_LATCHED = 1;
       global_data_A36444_500.fault_active = 1;
