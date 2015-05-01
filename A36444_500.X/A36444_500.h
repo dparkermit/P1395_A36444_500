@@ -226,8 +226,6 @@ typedef struct {
 
   unsigned int control_state;
 
-  unsigned int water_flow_counter;
-
 } HeaterMagnetControlData;
 
 
