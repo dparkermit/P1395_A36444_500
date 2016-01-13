@@ -52,6 +52,7 @@ void DoStateMachine(void) {
   switch (global_data_A36444_500.control_state) {
     
   case STATE_STARTUP:
+    DisableHeaterMagnetOutputs();
     InitializeA36444_500();
     _CONTROL_NOT_READY = 1;
     _CONTROL_NOT_CONFIGURED = 1;
@@ -172,7 +173,7 @@ void DoA36444_500(void) {
   
   
   // Check the status of these pins every time through the loop
-  if (PIN_PIC_INPUT_HEATER_OV_OK == ILL_HEATER_OV) {
+  if ((PIN_PIC_INPUT_HEATER_OV_OK == ILL_HEATER_OV && global_data_A36444_500.control_state == STATE_OPERATE)) {
     _FAULT_HW_HEATER_OVER_VOLTAGE = 1;
     global_data_A36444_500.fault_active = 1;
   }
@@ -240,7 +241,7 @@ void DoA36444_500(void) {
     global_data_A36444_500.fault_active = 0;
 
    
-    if (PIN_PIC_INPUT_HEATER_OV_OK == ILL_HEATER_OV) {
+    if ((PIN_PIC_INPUT_HEATER_OV_OK == ILL_HEATER_OV && global_data_A36444_500.control_state == STATE_OPERATE)) {
       _FAULT_HW_HEATER_OVER_VOLTAGE = 1;
       global_data_A36444_500.fault_active = 1;
     }
